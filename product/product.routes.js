@@ -108,6 +108,7 @@ router.put(
   "/product/edit/:id",
   isSeller,
   validateIdFromReqParams,
+  validateReqBody(addProductValidationSchema),
   async (req, res) => {
     // extract product id from req.params
     const productId = req.params.id;
