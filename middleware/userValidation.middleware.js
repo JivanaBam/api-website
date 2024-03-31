@@ -2,6 +2,7 @@ const validateReqBody = (validationSchema) => {
   return async (req, res, next) => {
     // extract new data from req.body
     const newData = req.body;
+
     try {
       const validatedData = await validationSchema.validate(newData);
       req.body = validatedData;
