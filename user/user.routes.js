@@ -10,6 +10,12 @@ import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
+//#########################
+// ! registr user?
+// it's just creating new user
+// forget not: to hash password before saving user into db
+//#########################
+
 // register routes
 router.post(
   "/user/register",
