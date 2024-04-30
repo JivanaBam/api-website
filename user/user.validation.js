@@ -20,7 +20,7 @@ export const registerUserValidationSchema = yup.object({
     .lowercase(),
   password: yup
     .string()
-    .min(6, "Password must be at least 6 characters.")
+    .min(5, "Password must be at least 5 characters.")
     .max(20, "Password must be at max 20 characters.")
     .required("Password is required"),
   role: yup

@@ -36,6 +36,7 @@ router.post(
     const plainPassword = newUser.password;
     const saltRound = 10; //to add randomness
     const hashedPassword = await bcrypt.hash(plainPassword, saltRound);
+    // bcryp=> convert plain password to hash password & compare with password given by user.
 
     //update new user password with hashedPassword.
     newUser.password = hashedPassword;
@@ -79,6 +80,7 @@ router.post(
 
     // generate access token
     const payload = { email: user.email };
+    //payload=> refers to the data that is sent in a request or received in a response.
 
     const token = jwt.sign(payload, process.env.ACCESS_TOKEN_SIGNATURE);
     // to hide password

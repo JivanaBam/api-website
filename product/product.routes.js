@@ -42,7 +42,7 @@ router.post(
 );
 
 // get product details by id
-router.get(
+router.post(
   "/product/details/:id",
   isUser,
   validateIdFromReqParams,
@@ -172,7 +172,7 @@ router.put(
 );
 
 //List product by buyer
-router.get(
+router.post(
   "/product/list/buyer",
   isBuyer,
   validateReqBody(paginationValidationSchema),
@@ -200,7 +200,7 @@ router.get(
           category: 1,
           freeShipping: 1,
           availableQuantity: 1,
-          description: 1,
+          description: { $substr: ["$description", 0, 100] },
           image: 1,
         },
       },
@@ -210,7 +210,7 @@ router.get(
 );
 
 // list product by seller
-router.get(
+router.post(
   "/product/list/seller",
   isSeller,
   validateReqBody(paginationValidationSchema),
