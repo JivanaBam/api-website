@@ -205,7 +205,15 @@ router.post(
         },
       },
     ]);
-    return res.status(200).send({ message: "success", productList: products });
+
+    const totalProducts = await Product.find().countDocuments();
+
+    const totalPages = Math.ceil(totalProducts / limit);
+    // ceil => it round up the decimal like 3.2 vayo vane & 1 page ko limit 3 xa vane 2 page banauxa
+
+    return res
+      .status(200)
+      .send({ message: "success", productList: products, totalPages });
   }
 );
 
@@ -240,7 +248,17 @@ router.post(
         },
       },
     ]);
-    return res.status(200).send({ message: "success", productList: products });
+
+    // calculate page
+    const totalProducts = await Product.find({
+      sellerId: req.loggedInUserId,
+    }).countDocuments();
+
+    const totalPages = Math.ceil(totalProducts / limit);
+
+    return res
+      .status(200)
+      .send({ message: "success", productList: products, totalPages });
   }
 );
 export default router;
