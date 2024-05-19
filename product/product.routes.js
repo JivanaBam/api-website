@@ -178,13 +178,19 @@ router.post(
   validateReqBody(paginationValidationSchema),
   async (req, res) => {
     // extract pagination from req.body
-    const { page, limit } = req.body;
-
+    const { page, limit, searchText } = req.body;
+    // console.log(searchText);
     const skip = (page - 1) * limit;
 
+    let match = {};
+
+    if (searchText) {
+      match = { name: { $regex: searchText, $options: "i" } };
+    }
+    // console.log(match);
     const products = await Product.aggregate([
       {
-        $match: {},
+        $match: match,
       },
       {
         $skip: skip,
@@ -206,7 +212,7 @@ router.post(
       },
     ]);
 
-    const totalProducts = await Product.find().countDocuments();
+    const totalProducts = await Product.find(match).countDocuments();
 
     const totalPages = Math.ceil(totalProducts / limit);
     // ceil => it round up the decimal like 3.2 vayo vane & 1 page ko limit 3 xa vane 2 page banauxa
@@ -231,7 +237,7 @@ router.post(
 
     const products = await Product.aggregate([
       {
-        $match: {},
+        $match: { sellerId: req.loggedInUserId },
       },
       {
         $skip: skip,
@@ -241,10 +247,14 @@ router.post(
       },
       {
         $project: {
-          sellerId: 0,
-          createdAt: 0,
-          updatedAt: 0,
-          __v: 0,
+          name: 1,
+          brand: 1,
+          price: 1,
+          category: 1,
+          freeShipping: 1,
+          availableQuantity: 1,
+          description: { $substr: ["$description", 0, 100] },
+          image: 1,
         },
       },
     ]);
@@ -256,6 +266,7 @@ router.post(
 
     const totalPages = Math.ceil(totalProducts / limit);
 
+    // send res
     return res
       .status(200)
       .send({ message: "success", productList: products, totalPages });
